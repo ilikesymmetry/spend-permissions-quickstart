@@ -30,7 +30,7 @@ export default function WalletWrapper({
     <>
       <Wallet>
         <ConnectWallet
-          withWalletAggregator={withWalletAggregator}
+          // withWalletAggregator={withWalletAggregator}
           text={text}
           className={className}
         >
