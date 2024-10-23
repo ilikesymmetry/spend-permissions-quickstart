@@ -18,7 +18,7 @@ export function useWagmiConfig() {
       coinbaseWallet({
         appName: "Subscribe Onchain",
         preference: "smartWalletOnly",
-        keysUrl: "http://localhost:3005",
+        // keysUrl: "http://localhost:3005/connect",
       }),
     ];
 
