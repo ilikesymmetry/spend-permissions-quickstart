@@ -5,6 +5,7 @@ import {
   spendPermissionManagerAddress,
 } from "../../lib/abi/SpendPermissionManager";
 import { clickAbi, clickAddress } from "@/lib/abi/Click";
+import { readContract } from "viem/actions";
 
 export async function POST(request: NextRequest) {
   console.log("pinged!");
@@ -13,6 +14,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { spendPermission, signature } = body;
     const value = "1";
+
+    // const permissionHash = await readContract(spenderBundlerClient, {
+    //   address: spendPermissionManagerAddress,
+    //   abi: spendPermissionManagerAbi,
+    //   functionName: "getHash",
+    //   args: [spendPermission],
+    // });
+
+    // console.log({ spendPermission, permissionHash });
 
     const hash = await spenderBundlerClient.sendUserOperation({
       calls: [

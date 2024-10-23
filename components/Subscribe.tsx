@@ -31,26 +31,26 @@ export default function Subscribe({
   const [isDisabled, setIsDisabled] = useState(false);
   const [signature, setSignature] = useState<Hex>();
   const [transactions, setTransactions] = useState<Hex[]>([]);
+  const [spendPermission, setSpendPermission] = useState<SpendPermission>();
 
   const { signTypedDataAsync } = useSignTypedData();
   const account = useAccount();
 
   const chain_id = useChainId();
 
-  console.log({ chain_id });
-
-  console.log({ signature });
-  console.log({ transactions });
-
-  const spendPermission: SpendPermission = {
-    account: account.address!,
-    spender: "0x776F2Bb62d8B5f4e9acE945E4aAE417f584406C4",
-    token,
-    allowance: price,
-    period: 86400,
-    start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
-    end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
-  };
+  useEffect(() => {
+    if (account?.address && !spendPermission) {
+      setSpendPermission({
+        account: account.address!,
+        spender: "0x776F2Bb62d8B5f4e9acE945E4aAE417f584406C4",
+        token,
+        allowance: price,
+        period: 86400,
+        start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
+        end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
+      });
+    }
+  }, [account?.address]);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["collectSubscription"],
