@@ -13,7 +13,10 @@ import { baseSepolia } from "wagmi/chains";
 // import { anExportedAddress, spenderBundlerClient } from "src/spender";
 import { createPublicClient, http } from "viem";
 // import { baseSepolia } from "viem/chains";
-import { BUNDLER_URL_SEPOLIA, MNEMONIC } from "src/config";
+import {
+  NEXT_PUBLIC_BUNDLER_URL_SEPOLIA,
+  NEXT_PUBLIC_MNEMONIC,
+} from "src/config";
 import { mnemonicToAccount } from "viem/accounts";
 import {
   BundlerClient,

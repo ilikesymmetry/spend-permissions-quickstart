@@ -6,5 +6,6 @@ export const NEXT_PUBLIC_URL =
 // Add your API KEY from the Coinbase Developer Portal
 export const NEXT_PUBLIC_CDP_API_KEY = process.env.NEXT_PUBLIC_CDP_API_KEY;
 export const NEXT_PUBLIC_WC_PROJECT_ID = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
-export const BUNDLER_URL_SEPOLIA = process.env.BUNDLER_URL_SEPOLIA;
-export const MNEMONIC = process.env.MNEMONIC;
+export const NEXT_PUBLIC_BUNDLER_URL_SEPOLIA =
+  process.env.NEXT_PUBLIC_BUNDLER_URL_SEPOLIA;
+export const NEXT_PUBLIC_MNEMONIC = process.env.NEXT_PUBLIC_MNEMONIC;

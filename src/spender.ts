@@ -1,6 +1,9 @@
 import { createPublicClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
-import { BUNDLER_URL_SEPOLIA, MNEMONIC } from "src/config";
+import {
+  NEXT_PUBLIC_BUNDLER_URL_SEPOLIA,
+  NEXT_PUBLIC_MNEMONIC,
+} from "src/config";
 import { mnemonicToAccount } from "viem/accounts";
 import {
   createBundlerClient,
@@ -16,7 +19,7 @@ export async function getSpenderBundlerClient() {
     transport: http(),
   });
 
-  const spenderAccountOwner = mnemonicToAccount(MNEMONIC!);
+  const spenderAccountOwner = mnemonicToAccount(NEXT_PUBLIC_MNEMONIC!);
 
   const spenderAccount = await toCoinbaseSmartAccount({
     client,
@@ -24,14 +27,14 @@ export async function getSpenderBundlerClient() {
   });
 
   const paymasterClient = createPaymasterClient({
-    transport: http(BUNDLER_URL_SEPOLIA),
+    transport: http(NEXT_PUBLIC_BUNDLER_URL_SEPOLIA),
   });
 
   const spenderBundlerClient = createBundlerClient({
     account: spenderAccount,
     client,
     paymaster: paymasterClient,
-    transport: http(BUNDLER_URL_SEPOLIA),
+    transport: http(NEXT_PUBLIC_BUNDLER_URL_SEPOLIA),
   });
 
   return spenderBundlerClient;
