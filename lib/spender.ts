@@ -17,18 +17,18 @@ export async function getSpenderBundlerClient() {
     process.env.SUBSCRIPTION_PRIVATE_KEY! as Hex
   );
 
-  console.log({ spenderAccountOwner });
+  // console.log({ spenderAccountOwner });
 
   const spenderAccount = await toCoinbaseSmartAccount({
     client,
     owners: [spenderAccountOwner],
   });
 
-  console.log({ spenderAccount });
+  // console.log({ spenderAccount });
   const paymasterClient = createPaymasterClient({
     transport: http(process.env.BASE_SEPOLIA_PAYMASTER_URL),
   });
-  console.log({ paymasterClient });
+  // console.log({ paymasterClient });
 
   const spenderBundlerClient = createBundlerClient({
     account: spenderAccount,
@@ -37,6 +37,6 @@ export async function getSpenderBundlerClient() {
     transport: http(process.env.BASE_SEPOLIA_PAYMASTER_URL),
   });
 
-  console.log({ spenderBundlerClient });
+  // console.log({ spenderBundlerClient });
   return spenderBundlerClient;
 }

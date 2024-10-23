@@ -22,12 +22,12 @@ export async function POST(request: NextRequest) {
           to: clickAddress,
           args: [],
         },
-        // {
-        //   abi: spendPermissionManagerAbi,
-        //   functionName: "spendWithSignature",
-        //   to: spendPermissionManagerAddress,
-        //   args: [spendPermission, signature, value],
-        // },
+        {
+          abi: spendPermissionManagerAbi,
+          functionName: "spendWithSignature",
+          to: spendPermissionManagerAddress,
+          args: [spendPermission, signature, value],
+        },
       ],
     });
     const receipt = await spenderBundlerClient.waitForUserOperationReceipt({
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       status: receipt.success ? "success" : "failure",
-      hash,
-      transactionUrl: `https://sepolia.basescan.org/tx/${hash}`,
+      transactionHash: receipt.receipt.transactionHash,
+      transactionUrl: `https://sepolia.basescan.org/tx/${receipt.receipt.transactionHash}`,
     });
   } catch (error) {
     console.error(error);

@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { base } from 'wagmi/chains';
-import { http, cookieStorage, createConfig, createStorage } from 'wagmi';
-import { coinbaseWallet } from 'wagmi/connectors';
-import { OnchainKitProvider } from '@coinbase/onchainkit';
-import { type ReactNode, useState } from 'react';
-import { type State, WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { base, baseSepolia } from "wagmi/chains";
+import { http, cookieStorage, createConfig, createStorage } from "wagmi";
+import { coinbaseWallet } from "wagmi/connectors";
+import { OnchainKitProvider } from "@coinbase/onchainkit";
+import { type ReactNode, useState } from "react";
+import { type State, WagmiProvider } from "wagmi";
 
 const config = createConfig({
-  chains: [base],
+  chains: [baseSepolia],
   connectors: [
     coinbaseWallet({
       appName: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
       preference: process.env.NEXT_PUBLIC_ONCHAINKIT_WALLET_CONFIG as
-        | 'smartWalletOnly'
-        | 'all',
-      keysUrl: "http://localhost:3005/connect"
+        | "smartWalletOnly"
+        | "all",
+      keysUrl: "http://localhost:3005/connect",
     }),
   ],
   storage: createStorage({
@@ -24,7 +24,7 @@ const config = createConfig({
   }),
   ssr: true,
   transports: {
-    [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
 });
 
@@ -40,10 +40,12 @@ export function Providers(props: {
         <OnchainKitProvider
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_CDP_KEY}
           chain={base}
-          config={{ appearance: { 
-            mode: 'auto',
-            theme: 'base',
-           } }}
+          config={{
+            appearance: {
+              mode: "auto",
+              theme: "base",
+            },
+          }}
         >
           {props.children}
         </OnchainKitProvider>

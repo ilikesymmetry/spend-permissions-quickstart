@@ -1,7 +1,7 @@
 "use client";
 import { cn, color, pressable, text } from "@coinbase/onchainkit/theme";
 import { useEffect, useState } from "react";
-import { useAccount, useSignTypedData } from "wagmi";
+import { useAccount, useChainId, useSignTypedData } from "wagmi";
 import { Address, Hex } from "viem";
 import { useQuery } from "@tanstack/react-query";
 import { SpendPermission } from "../lib/types";
@@ -35,12 +35,16 @@ export default function Subscribe({
   const { signTypedDataAsync } = useSignTypedData();
   const account = useAccount();
 
+  const chain_id = useChainId();
+
+  console.log({ chain_id });
+
   console.log({ signature });
   console.log({ transactions });
 
   const spendPermission: SpendPermission = {
     account: account.address!,
-    spender: spender ?? account.address!,
+    spender: "0x776F2Bb62d8B5f4e9acE945E4aAE417f584406C4",
     token,
     allowance: price,
     period: 86400,
@@ -60,9 +64,9 @@ export default function Subscribe({
     if (!data) return;
     console.log("new data", data);
     if (transactions.length > 9) {
-      setTransactions([data?.transactionHash, ...transactions.slice(0, 10)]);
+      setTransactions([data?.transactionUrl, ...transactions.slice(0, 10)]);
     } else {
-      setTransactions([data?.transactionHash, ...transactions]);
+      setTransactions([data?.transactionUrl, ...transactions]);
     }
   }, [data]);
 
@@ -183,11 +187,16 @@ export default function Subscribe({
         // </div>
         <div className="h-80 space-y-4 relative">
           <div className="text-lg font-bold">Subscription Payments</div>
-          <div className="">
-            {transactions.map((transactionHash, i) => (
-              <div key={i} className="hover:underline">
+          <div className="flex flex-col">
+            {transactions.map((transactionUrl, i) => (
+              <a
+                key={i}
+                className="hover:underline"
+                target="_blank"
+                href={transactionUrl}
+              >
                 View transaction
-              </div>
+              </a>
             ))}
           </div>
         </div>
