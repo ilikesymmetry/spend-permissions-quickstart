@@ -4,7 +4,6 @@ import {
   spendPermissionManagerAbi,
   spendPermissionManagerAddress,
 } from "../../lib/abi/SpendPermissionManager";
-import { encodeFunctionData } from "viem";
 import { clickAbi, clickAddress } from "@/lib/abi/Click";
 
 export async function POST(request: NextRequest) {
@@ -12,8 +11,8 @@ export async function POST(request: NextRequest) {
   const spenderBundlerClient = await getSpenderBundlerClient();
   try {
     const body = await request.json();
-    // console.log(body);
     const { spendPermission, signature } = body;
+    const value = "1";
 
     const hash = await spenderBundlerClient.sendUserOperation({
       calls: [
@@ -23,6 +22,12 @@ export async function POST(request: NextRequest) {
           to: clickAddress,
           args: [],
         },
+        // {
+        //   abi: spendPermissionManagerAbi,
+        //   functionName: "spendWithSignature",
+        //   to: spendPermissionManagerAddress,
+        //   args: [spendPermission, signature, value],
+        // },
       ],
     });
     const receipt = await spenderBundlerClient.waitForUserOperationReceipt({

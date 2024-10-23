@@ -5,6 +5,7 @@ import { useAccount, useSignTypedData } from "wagmi";
 import { Address, Hex } from "viem";
 import { useQuery } from "@tanstack/react-query";
 import { SpendPermission } from "../lib/types";
+import { spendPermissionManagerAddress } from "@/lib/abi/SpendPermissionManager";
 
 export type Subscription = {
   chainId: number;
@@ -42,7 +43,7 @@ export default function Subscribe({
     spender: spender ?? account.address!,
     token,
     allowance: price,
-    period,
+    period: 86400,
     start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
     end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
   };
@@ -100,7 +101,12 @@ export default function Subscribe({
     setIsDisabled(true);
     try {
       const signature = await signTypedDataAsync({
-        domain: { name: "Spend Permission Manager", chainId: chainId },
+        domain: {
+          name: "Spend Permission Manager",
+          version: "1",
+          chainId: chainId,
+          verifyingContract: spendPermissionManagerAddress,
+        },
         types: {
           SpendPermission: [
             { name: "account", type: "address" },
