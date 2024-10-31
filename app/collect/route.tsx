@@ -5,7 +5,6 @@ import {
   spendPermissionManagerAddress,
 } from "../../lib/abi/SpendPermissionManager";
 import { clickAbi, clickAddress } from "@/lib/abi/Click";
-import { readContract } from "viem/actions";
 
 export async function POST(request: NextRequest) {
   console.log("pinged!");
@@ -14,17 +13,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { spendPermission, signature } = body;
     const value = "1";
-    console.log({ spendPermission, signature });
-    // const permissionHash = await readContract(spenderBundlerClient, {
-    //   address: spendPermissionManagerAddress,
-    //   abi: spendPermissionManagerAbi,
-    //   functionName: "getHash",
-    //   args: [spendPermission],
-    // });
 
-    // console.log({ spendPermission, permissionHash });
     console.log({ spenderAddress: spenderBundlerClient.account.address });
-    const approvalHash = await spenderBundlerClient.sendUserOperation({
+    const userOpHash = await spenderBundlerClient.sendUserOperation({
       calls: [
         // {
         //   abi: clickAbi,
@@ -38,16 +29,6 @@ export async function POST(request: NextRequest) {
           to: spendPermissionManagerAddress,
           args: [spendPermission, signature],
         },
-      ],
-    });
-    console.log({ approvalHash });
-    const approvalReceipt =
-      await spenderBundlerClient.waitForUserOperationReceipt({
-        hash: approvalHash,
-      });
-    console.log({ approvalReceipt });
-    const spendHash = await spenderBundlerClient.sendUserOperation({
-      calls: [
         {
           abi: spendPermissionManagerAbi,
           functionName: "spend",
@@ -56,18 +37,17 @@ export async function POST(request: NextRequest) {
         },
       ],
     });
-    console.log({ spendHash });
-    const spendReceipt = await spenderBundlerClient.waitForUserOperationReceipt(
-      {
-        hash: spendHash,
-      }
-    );
-    console.log({ spendReceipt });
+
+    const userOpReceipt =
+      await spenderBundlerClient.waitForUserOperationReceipt({
+        hash: userOpHash,
+      });
+    console.log({ userOpReceipt });
 
     return NextResponse.json({
-      status: spendReceipt.success ? "success" : "failure",
-      transactionHash: spendReceipt.receipt.transactionHash,
-      transactionUrl: `https://sepolia.basescan.org/tx/${receipt.receipt.transactionHash}`,
+      status: userOpReceipt.success ? "success" : "failure",
+      transactionHash: userOpReceipt.receipt.transactionHash,
+      transactionUrl: `https://sepolia.basescan.org/tx/${userOpReceipt.receipt.transactionHash}`,
     });
   } catch (error) {
     console.error(error);

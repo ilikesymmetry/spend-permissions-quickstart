@@ -42,13 +42,13 @@ export default function Subscribe({
     if (account?.address && !spendPermission) {
       setSpendPermission({
         account: account.address!, // 0xeB8a6a83a3b249Ffa88072b0844Ca37B03964db7 has permission manager as owner
-        spender: "0xeAFEB47faa42e86580ffdf5AFE2b350A5B197955",
+        spender: process.env.NEXT_PUBLIC_SUBSCRIPTION_SPENDER! as Address,
         token: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
         allowance: price,
         period: 86400,
         start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
         end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
-        salt: 0,
+        salt: BigInt(0),
         extraData: "0x",
       });
     }
@@ -181,7 +181,7 @@ export default function Subscribe({
           ],
         },
         primaryType: "SpendPermission",
-        message: spendPermission,
+        message: spendPermission!,
       });
       console.log({ signature });
       setSignature(signature);
