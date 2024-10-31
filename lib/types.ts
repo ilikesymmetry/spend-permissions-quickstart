@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, Hex } from "viem";
 
 export type SpendPermission = {
   account: Address; // address
@@ -8,4 +8,6 @@ export type SpendPermission = {
   period: number; // uint48
   start: number; // uint48
   end: number; // uint48
+  salt: bigint; // uint256
+  extraData: Hex; // bytes
 };

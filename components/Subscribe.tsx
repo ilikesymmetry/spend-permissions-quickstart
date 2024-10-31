@@ -41,13 +41,15 @@ export default function Subscribe({
   useEffect(() => {
     if (account?.address && !spendPermission) {
       setSpendPermission({
-        account: account.address!,
-        spender: "0x776F2Bb62d8B5f4e9acE945E4aAE417f584406C4",
-        token,
+        account: account.address!, // 0xeB8a6a83a3b249Ffa88072b0844Ca37B03964db7 has permission manager as owner
+        spender: process.env.NEXT_PUBLIC_SUBSCRIPTION_SPENDER! as Address,
+        token: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
         allowance: price,
         period: 86400,
         start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
         end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
+        salt: BigInt(0),
+        extraData: "0x",
       });
     }
   }, [account?.address]);
@@ -55,7 +57,7 @@ export default function Subscribe({
   const { data, error, isLoading } = useQuery({
     queryKey: ["collectSubscription"],
     queryFn: handleCollectSubscription,
-    refetchInterval: 5000, // 5 seconds
+    refetchInterval: 10000, // 5 seconds
     refetchOnWindowFocus: false,
     enabled: !!signature,
   });
@@ -71,7 +73,7 @@ export default function Subscribe({
   }, [data]);
 
   async function handleCollectSubscription() {
-    console.log("query");
+    console.log("calling handleCollectSubscription");
     console.log({ spendPermission, signature });
     const replacer = (key: string, value: any) => {
       if (typeof value === "bigint") {
@@ -101,8 +103,62 @@ export default function Subscribe({
     return data;
   }
 
+  // ====================================================
+  // Batch example
+  // const signature = await signTypedDataAsync({
+  //   domain: {
+  //     name: "Spend Permission Manager",
+  //     version: "1",
+  //     chainId: chainId,
+  //     verifyingContract: spendPermissionManagerAddress,
+  //   },
+  //   types: {
+  //     PermissionDetails: [
+  //       { name: "spender", type: "address" },
+  //       { name: "token", type: "address" },
+  //       { name: "allowance", type: "uint160" },
+  //       { name: "salt", type: "uint256" },
+  //       { name: "extraData", type: "bytes" },
+  //     ],
+  //     SpendPermissionBatch: [
+  //       { name: "account", type: "address" },
+  //       { name: "period", type: "uint48" },
+  //       { name: "start", type: "uint48" },
+  //       { name: "end", type: "uint48" },
+  //       { permissions: "PermissionDetails[]" },
+  //     ],
+
+  //   },
+  //   primaryType: "SpendPermission",
+  //   message: {
+  //     account: "0xa10Aac6675b5d2870647cE840fE7280F49fb0B13",
+  //     period: 86400,
+  //     start: 1730236033,
+  //     end: 1761797231,
+  //     permissions: [
+  //       {
+  //         spender: "0xeAFEB47faa42e86580ffdf5AFE2b350A5B197955",
+  //         token: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  //         allowance: 1000000000000000000,
+  //         salt: 0,
+  //         extraData: "0x",
+  //       },
+  //       {
+  //         spender: "0xeAFEB47faa42e86580ffdf5AFE2b350A5B197955",
+  //         token: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  //         allowance: 1000000000000000000,
+  //         salt: 1,
+  //         extraData: "0x",
+  //       },
+  //     ],
+  //   },
+  // });
+  // ====================================================
+
   async function handleSubmit() {
     setIsDisabled(true);
+    console.log("calling handleSubmit");
+    console.log({ spendPermission });
     try {
       const signature = await signTypedDataAsync({
         domain: {
@@ -120,11 +176,14 @@ export default function Subscribe({
             { name: "period", type: "uint48" },
             { name: "start", type: "uint48" },
             { name: "end", type: "uint48" },
+            { name: "salt", type: "uint256" },
+            { name: "extraData", type: "bytes" },
           ],
         },
         primaryType: "SpendPermission",
-        message: spendPermission,
+        message: spendPermission!,
       });
+      console.log({ signature });
       setSignature(signature);
     } catch (e) {
       console.log("catch", e);
