@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { spendPermission, signature } = body;
     const value = "1";
-
+    console.log({ spendPermission, signature });
     // const permissionHash = await readContract(spenderBundlerClient, {
     //   address: spendPermissionManagerAddress,
     //   abi: spendPermissionManagerAbi,
@@ -23,31 +23,50 @@ export async function POST(request: NextRequest) {
     // });
 
     // console.log({ spendPermission, permissionHash });
-
-    const hash = await spenderBundlerClient.sendUserOperation({
+    console.log({ spenderAddress: spenderBundlerClient.account.address });
+    const approvalHash = await spenderBundlerClient.sendUserOperation({
       calls: [
-        {
-          abi: clickAbi,
-          functionName: "click",
-          to: clickAddress,
-          args: [],
-        },
+        // {
+        //   abi: clickAbi,
+        //   functionName: "click",
+        //   to: clickAddress,
+        //   args: [],
+        // },
         {
           abi: spendPermissionManagerAbi,
-          functionName: "spendWithSignature",
+          functionName: "approveWithSignature",
           to: spendPermissionManagerAddress,
-          args: [spendPermission, signature, value],
+          args: [spendPermission, signature],
         },
       ],
     });
-    const receipt = await spenderBundlerClient.waitForUserOperationReceipt({
-      hash,
+    console.log({ approvalHash });
+    const approvalReceipt =
+      await spenderBundlerClient.waitForUserOperationReceipt({
+        hash: approvalHash,
+      });
+    console.log({ approvalReceipt });
+    const spendHash = await spenderBundlerClient.sendUserOperation({
+      calls: [
+        {
+          abi: spendPermissionManagerAbi,
+          functionName: "spend",
+          to: spendPermissionManagerAddress,
+          args: [spendPermission, value],
+        },
+      ],
     });
-    console.log({ receipt });
+    console.log({ spendHash });
+    const spendReceipt = await spenderBundlerClient.waitForUserOperationReceipt(
+      {
+        hash: spendHash,
+      }
+    );
+    console.log({ spendReceipt });
 
     return NextResponse.json({
-      status: receipt.success ? "success" : "failure",
-      transactionHash: receipt.receipt.transactionHash,
+      status: spendReceipt.success ? "success" : "failure",
+      transactionHash: spendReceipt.receipt.transactionHash,
       transactionUrl: `https://sepolia.basescan.org/tx/${receipt.receipt.transactionHash}`,
     });
   } catch (error) {
