@@ -1,7 +1,13 @@
 "use client";
 import { cn, color, pressable, text } from "@coinbase/onchainkit/theme";
 import { useEffect, useState } from "react";
-import { useAccount, useChainId, useSignTypedData } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useConnect,
+  useConnectors,
+  useSignTypedData,
+} from "wagmi";
 import { Address, Hex } from "viem";
 import { useQuery } from "@tanstack/react-query";
 import { SpendPermission } from "../lib/types";
@@ -35,29 +41,12 @@ export default function Subscribe({
 
   const { signTypedDataAsync } = useSignTypedData();
   const account = useAccount();
+  const { connectAsync } = useConnect();
+  const connectors = useConnectors();
 
-  const chain_id = useChainId();
-
-  useEffect(() => {
-    if (account?.address && !spendPermission) {
-      setSpendPermission({
-        account: account.address!, // 0xeB8a6a83a3b249Ffa88072b0844Ca37B03964db7 has permission manager as owner
-        spender: process.env.NEXT_PUBLIC_SUBSCRIPTION_SPENDER! as Address,
-        token: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        allowance: price,
-        period: 86400,
-        start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
-        end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
-        salt: BigInt(0),
-        extraData: "0x",
-      });
-    }
-  }, [account?.address]);
-
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["collectSubscription"],
     queryFn: handleCollectSubscription,
-    refetchInterval: 10000, // 5 seconds
     refetchOnWindowFocus: false,
     enabled: !!signature,
   });
@@ -66,40 +55,47 @@ export default function Subscribe({
     if (!data) return;
     console.log("new data", data);
     if (transactions.length > 9) {
-      setTransactions([data?.transactionUrl, ...transactions.slice(0, 10)]);
+      setTransactions([data?.transactionHash, ...transactions.slice(0, 10)]);
     } else {
-      setTransactions([data?.transactionUrl, ...transactions]);
+      setTransactions([data?.transactionHash, ...transactions]);
     }
   }, [data]);
 
   async function handleCollectSubscription() {
-    console.log("calling handleCollectSubscription");
-    console.log({ spendPermission, signature });
-    const replacer = (key: string, value: any) => {
-      if (typeof value === "bigint") {
-        return value.toString();
-      }
-      return value;
-    };
-    const response = await fetch("/collect", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(
-        {
-          spendPermission,
-          signature,
-          dummyData: Math.ceil(Math.random() * 100),
+    setIsDisabled(true);
+    let data;
+    try {
+      console.log("calling handleCollectSubscription");
+      console.log({ spendPermission, signature });
+      const replacer = (key: string, value: any) => {
+        if (typeof value === "bigint") {
+          return value.toString();
+        }
+        return value;
+      };
+      const response = await fetch("/collect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        replacer
-      ),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+        body: JSON.stringify(
+          {
+            spendPermission,
+            signature,
+            dummyData: Math.ceil(Math.random() * 100),
+          },
+          replacer
+        ),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      console.log({ response });
+      data = await response.json();
+    } catch (e) {
+      console.log("catch", e);
     }
-    console.log({ response });
-    const data = await response.json();
+    setIsDisabled(false);
     return data;
   }
 
@@ -155,10 +151,34 @@ export default function Subscribe({
   // });
   // ====================================================
 
+  console.log({ connectors });
+
   async function handleSubmit() {
     setIsDisabled(true);
-    console.log("calling handleSubmit");
-    console.log({ spendPermission });
+    let accountAddress = account?.address;
+    if (!accountAddress) {
+      try {
+        const requestAccounts = await connectAsync({
+          connector: connectors[0],
+        });
+        accountAddress = requestAccounts.accounts[0];
+      } catch {
+        return;
+      }
+    }
+
+    const spendPermission = {
+      account: accountAddress,
+      spender: process.env.NEXT_PUBLIC_SUBSCRIPTION_SPENDER! as Address,
+      token: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" as Address,
+      allowance: price,
+      period: 86400,
+      start: Math.floor(start?.valueOf() ?? Date.now() / 1000),
+      end: !!end ? Math.floor(end.valueOf() / 1000) : MAX_UINT48,
+      salt: BigInt(0),
+      extraData: "0x" as Hex,
+    };
+
     try {
       const signature = await signTypedDataAsync({
         domain: {
@@ -181,9 +201,10 @@ export default function Subscribe({
           ],
         },
         primaryType: "SpendPermission",
-        message: spendPermission!,
+        message: spendPermission,
       });
-      console.log({ signature });
+      console.log({ spendPermission, signature });
+      setSpendPermission(spendPermission);
       setSignature(signature);
     } catch (e) {
       console.log("catch", e);
@@ -219,44 +240,46 @@ export default function Subscribe({
           </button>
         </div>
       ) : (
-        // <div className="flex w-[450px]">
-        //   <button
-        //     className={cn(
-        //       pressable.primary,
-        //       "w-full rounded-xl",
-        //       "px-4 py-3 font-medium text-base text-white leading-6",
-        //       isDisabled && pressable.disabled,
-        //       text.headline
-        //     )}
-        //     onClick={handleCollectSubscription}
-        //     type="button"
-        //     disabled={isDisabled}
-        //     data-testid="collectSubscriptionButton_Button"
-        //   >
-        //     <span
-        //       className={cn(
-        //         text.headline,
-        //         color.inverse,
-        //         "flex justify-center"
-        //       )}
-        //     >
-        //       Collect Subscription
-        //     </span>
-        //   </button>
-        // </div>
-        <div className="h-80 space-y-4 relative">
-          <div className="text-lg font-bold">Subscription Payments</div>
-          <div className="flex flex-col">
-            {transactions.map((transactionUrl, i) => (
-              <a
-                key={i}
-                className="hover:underline"
-                target="_blank"
-                href={transactionUrl}
+        <div className="space-y-8 w-[450px]">
+          <div className="flex">
+            <button
+              className={cn(
+                pressable.primary,
+                "w-full rounded-xl",
+                "px-4 py-3 font-medium text-base text-white leading-6",
+                isDisabled && pressable.disabled,
+                text.headline
+              )}
+              onClick={() => refetch()}
+              type="button"
+              disabled={isDisabled}
+              data-testid="collectSubscriptionButton_Button"
+            >
+              <span
+                className={cn(
+                  text.headline,
+                  color.inverse,
+                  "flex justify-center"
+                )}
               >
-                View transaction
-              </a>
-            ))}
+                Collect Subscription
+              </span>
+            </button>
+          </div>
+          <div className="h-80 space-y-4 relative">
+            <div className="text-lg font-bold">Subscription Payments</div>
+            <div className="flex flex-col">
+              {transactions.map((transactionHash, i) => (
+                <a
+                  key={i}
+                  className="hover:underline text-ellipsis truncate"
+                  target="_blank"
+                  href={`https://sepolia.basescan.org/tx/${transactionHash}`}
+                >
+                  View transaction {transactionHash}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       )}
