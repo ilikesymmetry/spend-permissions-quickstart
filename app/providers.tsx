@@ -16,6 +16,7 @@ const config = createConfig({
       preference: process.env.NEXT_PUBLIC_ONCHAINKIT_WALLET_CONFIG as
         | "smartWalletOnly"
         | "all",
+      // @ts-ignore
       keysUrl: "http://localhost:3005/connect",
     }),
   ],
@@ -39,6 +40,7 @@ export function Providers(props: {
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_CDP_KEY}
+          // @ts-ignore
           chain={base}
           config={{
             appearance: {
