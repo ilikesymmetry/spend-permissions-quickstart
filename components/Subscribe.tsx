@@ -85,7 +85,7 @@ export default function Subscribe() {
       setSpendPermission(spendPermission);
       setSignature(signature);
     } catch (e) {
-      // Handle error
+      console.error(e);
     }
     setIsDisabled(false);
   }
@@ -119,7 +119,7 @@ export default function Subscribe() {
       }
       data = await response.json();
     } catch (e) {
-      // Handle error
+      console.error(e);
     }
     setIsDisabled(false);
     return data;
