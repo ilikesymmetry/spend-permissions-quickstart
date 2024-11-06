@@ -19,20 +19,6 @@ export async function POST(request: NextRequest) {
           to: spendPermissionManagerAddress,
           args: [spendPermission, signature],
         },
-      ],
-    });
-
-    const userOpReceipt =
-      await spenderBundlerClient.waitForUserOperationReceipt({
-        hash: userOpHash,
-      });
-
-    if (userOpReceipt.success) {
-      console.log("Spend Permission approved");
-    }
-
-    const spendUserOpHash = await spenderBundlerClient.sendUserOperation({
-      calls: [
         {
           abi: spendPermissionManagerAbi,
           functionName: "spend",
@@ -42,16 +28,15 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const spendUserOpReceipt =
+    const userOpReceipt =
       await spenderBundlerClient.waitForUserOperationReceipt({
-        hash: spendUserOpHash,
+        hash: userOpHash,
       });
-    console.log({ userOpReceipt });
 
     return NextResponse.json({
-      status: spendUserOpReceipt.success ? "success" : "failure",
-      transactionHash: spendUserOpReceipt.receipt.transactionHash,
-      transactionUrl: `https://sepolia.basescan.org/tx/${spendUserOpReceipt.receipt.transactionHash}`,
+      status: userOpReceipt.success ? "success" : "failure",
+      transactionHash: userOpReceipt.receipt.transactionHash,
+      transactionUrl: `https://sepolia.basescan.org/tx/${userOpReceipt.receipt.transactionHash}`,
     });
   } catch (error) {
     console.error(error);
