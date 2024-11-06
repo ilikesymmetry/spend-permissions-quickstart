@@ -66,13 +66,7 @@ export default function App() {
             <OnchainkitSvg className="text-white w-2/3 mx-auto" />
           </a>
         </div>
-        <Subscribe
-          chainId={84532}
-          token="0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-          price={parseUnits("10", 18)}
-          period={5}
-          spender={undefined}
-        />
+        <Subscribe />
       </main>
     </div>
   );
