@@ -13,8 +13,8 @@ cp template.env .env
 ```
 NEXT_PUBLIC_ONCHAINKIT_CDP_KEY=""
 BASE_SEPOLIA_PAYMASTER_URL=""
-SPENDER_OWNER_PRIVATE_KEY=""
-NEXT_PUBLIC_SPENDER_WALLET_ADDRESS=""
+SPENDER_PRIVATE_KEY=""
+NEXT_PUBLIC_SPENDER_ADDRESS=""
 ```
 
 First, go to [portal.cdp.coinbase.com](https://portal.cdp.coinbase.com) and sign up for an account.
@@ -24,8 +24,8 @@ First, go to [portal.cdp.coinbase.com](https://portal.cdp.coinbase.com) and sign
 
 Next, you need to generate a **new** private key. Foundry's `cast wallet new` is recommended and you can [install Foundry here](https://book.getfoundry.sh/getting-started/installation).
 
-- `SPENDER_OWNER_PRIVATE_KEY`: set the output private key from `cast wallet new`
-- `NEXT_PUBLIC_SPENDER_WALLET_ADDRESS`: set the output address from `cast wallet new` (note we will actually change this later)
+- `SPENDER_PRIVATE_KEY`: set the output private key from `cast wallet new`
+- `NEXT_PUBLIC_SPENDER_ADDRESS`: set the output address from `cast wallet new` (note we will actually change this later)
 
 ### Install and run
 
