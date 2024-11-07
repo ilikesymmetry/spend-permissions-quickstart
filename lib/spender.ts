@@ -13,9 +13,12 @@ export async function getSpenderBundlerClient() {
     transport: http(),
   });
 
+  console.log({ privateKey: process.env.SPENDER_OWNER_PRIVATE_KEY! as Hex });
+
   const spenderAccountOwner = privateKeyToAccount(
-    process.env.SUBSCRIPTION_PRIVATE_KEY! as Hex
+    process.env.SPENDER_OWNER_PRIVATE_KEY! as Hex
   );
+  console.log({ spenderAccountOwner });
 
   // console.log({ spenderAccountOwner });
 
