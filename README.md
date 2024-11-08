@@ -1,4 +1,4 @@
-# Subscribe Onchain
+# Spend Permissions Quickstart
 
 ## Getting Started
 
