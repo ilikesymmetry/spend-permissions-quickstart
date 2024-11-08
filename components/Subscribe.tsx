@@ -10,7 +10,6 @@ import {
 } from "wagmi";
 import { Address, Hex, parseUnits } from "viem";
 import { useQuery } from "@tanstack/react-query";
-// import { SpendPermission } from "../lib/types";
 import { spendPermissionManagerAddress } from "@/lib/abi/SpendPermissionManager";
 
 export default function Subscribe() {
@@ -25,7 +24,7 @@ export default function Subscribe() {
   const { connectAsync } = useConnect();
   const connectors = useConnectors();
 
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["collectSubscription"],
     queryFn: handleCollectSubscription,
     refetchOnWindowFocus: false,
@@ -48,7 +47,7 @@ export default function Subscribe() {
 
     const spendPermission = {
       account: accountAddress, // User wallet address
-      spender: process.env.NEXT_PUBLIC_SUBSCRIPTION_SPENDER! as Address, // Spender smart contract wallet address
+      spender: process.env.NEXT_PUBLIC_SPENDER_ADDRESS! as Address, // Spender smart contract wallet address
       token: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" as Address, // ETH (https://eips.ethereum.org/EIPS/eip-7528)
       allowance: parseUnits("10", 18),
       period: 86400, // seconds in a day

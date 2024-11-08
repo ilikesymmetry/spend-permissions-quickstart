@@ -17,7 +17,7 @@ const config = createConfig({
         | "smartWalletOnly"
         | "all",
       // @ts-ignore
-      keysUrl: "http://localhost:3005/connect", //"https://wallet.chameleon.systems"
+      keysUrl: "http://localhost:3005/connect", // "https://keys-beta.coinbase.com/connect"
     }),
   ],
   storage: createStorage({
