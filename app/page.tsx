@@ -58,14 +58,14 @@ export default function App() {
         </div>
       </header>
       <main className="flex-grow flex flex-col items-center justify-center space-y-20">
-        <div className="max-w-2xl w-full p-4 flex flex-col items-center absolute top-4">
+        {/* <div className="max-w-2xl w-full p-4 flex flex-col items-center absolute top-4">
           <div className="w-1/6 mx-auto">
             <ImageSvg />
           </div>
           <a target="_blank" rel="_template" href="https://onchainkit.xyz">
             <OnchainkitSvg className="text-white w-2/3 mx-auto" />
           </a>
-        </div>
+        </div> */}
         <Subscribe />
       </main>
     </div>
