@@ -17,7 +17,8 @@ const config = createConfig({
         | "smartWalletOnly"
         | "all",
       // @ts-ignore
-      keysUrl: "https://keys-dev.coinbase.com/connect",
+      // keysUrl: "https://keys-dev.coinbase.com/connect",
+      keysUrl: "http://localhost:3005/connect",
     }),
   ],
   storage: createStorage({
