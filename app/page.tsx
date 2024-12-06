@@ -18,7 +18,6 @@ import {
 import ImageSvg from "./svg/Image";
 import OnchainkitSvg from "./svg/OnchainKit";
 import Subscribe from "@/components/Subscribe";
-import { parseUnits } from "viem";
 import { useAccount } from "wagmi";
 
 export default function App() {
