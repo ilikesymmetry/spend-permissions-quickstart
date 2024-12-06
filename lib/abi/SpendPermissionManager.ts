@@ -1,8 +1,7 @@
 import { Address } from "viem";
 
 export const spendPermissionManagerAddress =
-  // "0x3e32aC1f7D5Fdb34D9f095e8C940e395469E588c" as Address;
-  "0x6Bb91a81aa8C4edDBe04c774015279445fE68B5A" as Address;
+  "0xD5Ca2d1818a835B10f78b45Bc1cD5Db305c10fA8" as Address;
 
 export const spendPermissionManagerAbi = [
   {
@@ -18,6 +17,13 @@ export const spendPermissionManagerAbi = [
     stateMutability: "nonpayable",
   },
   { type: "receive", stateMutability: "payable" },
+  {
+    type: "function",
+    name: "IERC721_INTERFACE_ID",
+    inputs: [],
+    outputs: [{ name: "", type: "bytes4", internalType: "bytes4" }],
+    stateMutability: "view",
+  },
   {
     type: "function",
     name: "MAGIC_SPEND",
@@ -73,7 +79,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -101,7 +107,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermissionBatch",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermissionBatch",
+        internalType: "struct SpendPermissionBatch",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "period", type: "uint48", internalType: "uint48" },
@@ -110,7 +116,7 @@ export const spendPermissionManagerAbi = [
           {
             name: "permissions",
             type: "tuple[]",
-            internalType: "struct SpendPermissionManager.PermissionDetails[]",
+            internalType: "struct PermissionDetails[]",
             components: [
               {
                 name: "spender",
@@ -153,7 +159,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "permissionToApprove",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -173,7 +179,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "permissionToRevoke",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -193,7 +199,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "lastValidUpdatedPeriod",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.PeriodSpend",
+        internalType: "struct PeriodSpend",
         components: [
           { name: "start", type: "uint48", internalType: "uint48" },
           { name: "end", type: "uint48", internalType: "uint48" },
@@ -211,7 +217,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -263,7 +269,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermissionBatch",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermissionBatch",
+        internalType: "struct SpendPermissionBatch",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "period", type: "uint48", internalType: "uint48" },
@@ -272,7 +278,7 @@ export const spendPermissionManagerAbi = [
           {
             name: "permissions",
             type: "tuple[]",
-            internalType: "struct SpendPermissionManager.PermissionDetails[]",
+            internalType: "struct PermissionDetails[]",
             components: [
               {
                 name: "spender",
@@ -314,7 +320,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -336,7 +342,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.PeriodSpend",
+        internalType: "struct PeriodSpend",
         components: [
           { name: "start", type: "uint48", internalType: "uint48" },
           { name: "end", type: "uint48", internalType: "uint48" },
@@ -353,7 +359,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -381,7 +387,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -403,7 +409,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.PeriodSpend",
+        internalType: "struct PeriodSpend",
         components: [
           { name: "start", type: "uint48", internalType: "uint48" },
           { name: "end", type: "uint48", internalType: "uint48" },
@@ -420,7 +426,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -448,7 +454,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -476,7 +482,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -504,7 +510,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -532,7 +538,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -560,7 +566,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -589,7 +595,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "spendPermission",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -637,7 +643,7 @@ export const spendPermissionManagerAbi = [
         name: "spendPermission",
         type: "tuple",
         indexed: false,
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -671,7 +677,7 @@ export const spendPermissionManagerAbi = [
         name: "spendPermission",
         type: "tuple",
         indexed: false,
-        internalType: "struct SpendPermissionManager.SpendPermission",
+        internalType: "struct SpendPermission",
         components: [
           { name: "account", type: "address", internalType: "address" },
           { name: "spender", type: "address", internalType: "address" },
@@ -723,7 +729,7 @@ export const spendPermissionManagerAbi = [
         name: "periodSpend",
         type: "tuple",
         indexed: false,
-        internalType: "struct SpendPermissionManager.PeriodSpend",
+        internalType: "struct PeriodSpend",
         components: [
           { name: "start", type: "uint48", internalType: "uint48" },
           { name: "end", type: "uint48", internalType: "uint48" },
@@ -757,6 +763,11 @@ export const spendPermissionManagerAbi = [
       { name: "start", type: "uint48", internalType: "uint48" },
     ],
   },
+  {
+    type: "error",
+    name: "ERC721TokenNotSupported",
+    inputs: [{ name: "token", type: "address", internalType: "address" }],
+  },
   { type: "error", name: "EmptySpendPermissionBatch", inputs: [] },
   {
     type: "error",
@@ -773,7 +784,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "actualLastUpdatedPeriod",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.PeriodSpend",
+        internalType: "struct PeriodSpend",
         components: [
           { name: "start", type: "uint48", internalType: "uint48" },
           { name: "end", type: "uint48", internalType: "uint48" },
@@ -783,7 +794,7 @@ export const spendPermissionManagerAbi = [
       {
         name: "expectedLastUpdatedPeriod",
         type: "tuple",
-        internalType: "struct SpendPermissionManager.PeriodSpend",
+        internalType: "struct PeriodSpend",
         components: [
           { name: "start", type: "uint48", internalType: "uint48" },
           { name: "end", type: "uint48", internalType: "uint48" },
@@ -807,6 +818,22 @@ export const spendPermissionManagerAbi = [
     inputs: [
       { name: "start", type: "uint48", internalType: "uint48" },
       { name: "end", type: "uint48", internalType: "uint48" },
+    ],
+  },
+  {
+    type: "error",
+    name: "InvalidWithdrawRequestNonce",
+    inputs: [
+      {
+        name: "noncePostfix",
+        type: "uint128",
+        internalType: "uint128",
+      },
+      {
+        name: "permissionHashPostfix",
+        type: "uint128",
+        internalType: "uint128",
+      },
     ],
   },
   {
