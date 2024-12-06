@@ -180,7 +180,7 @@ export default function Subscribe() {
                   "flex justify-center"
                 )}
               >
-                Collect Subscription
+                Collect
               </span>
             </button>
           </div>
