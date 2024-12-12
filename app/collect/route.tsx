@@ -14,7 +14,11 @@ export async function POST(request: NextRequest) {
     const { spendPermission, signature } = body;
 
     // transact with EOA or Smart Wallet, make sure to update NEXT_PUBLIC_SPENDER_ADDRESS variable in accordance with choice
-    const { success, transactionHash } = await transactSmartWallet(
+    // const { success, transactionHash } = await transactSmartWallet(
+    //   spendPermission,
+    //   signature
+    // );
+    const { success, transactionHash } = await transactEOA(
       spendPermission,
       signature
     );
